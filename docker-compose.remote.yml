@@ -1,0 +1,23 @@
+services:
+  gemini-gateway:
+    # GitHub Container Registry 远程预构建镜像
+    image: ghcr.io/zhihao-zzh/gemini-apikey-polling-server:latest
+    container_name: gemini-polling-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - HOST=0.0.0.0
+      - DATA_DIR=/app/data
+      - GATEWAY_TOKEN=              # 可选：客户端访问网关的 Master Token
+      - ADMIN_PASSWORD=             # 可选：Web 管理后台访问密码（留空则免密）
+      - PROXY_URL=                  # 可选：上游代理（如 http://127.0.0.1:7890）
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

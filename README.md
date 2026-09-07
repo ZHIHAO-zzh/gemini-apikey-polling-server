@@ -34,12 +34,22 @@
 
 ## 🚀 快速启动
 
-### 方式一：使用 Docker Compose（推荐）
+### 方式一：使用 Docker 远程预构建镜像（最推荐，免本地编译）
 
-在项目根目录下直接执行：
+无需安装 Node.js 环境，直接使用已打包好的远程镜像启动：
 
 ```bash
-docker compose up -d
+docker compose -f docker-compose.remote.yml up -d
+```
+
+---
+
+### 方式二：本地 Docker 源码构建启动
+
+如果你想在本地基于源码构建镜像运行：
+
+```bash
+docker compose up -d --build
 ```
 
 启动完成后：
@@ -50,7 +60,7 @@ docker compose up -d
 
 ---
 
-### 方式二：本地 Node.js 源码启动
+### 方式三：本地 Node.js 源码启动
 
 需要 Node.js 18+ 或 20+：
 
