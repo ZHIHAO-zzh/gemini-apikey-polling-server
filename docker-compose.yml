@@ -1,0 +1,24 @@
+services:
+  gemini-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gemini-polling-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - HOST=0.0.0.0
+      - DATA_DIR=/app/data
+      - GATEWAY_TOKEN=              # 可选：对外客户端请求访问网关的 Master Token
+      - ADMIN_PASSWORD=             # 可选：Web 管理后台访问密码（留空则免密）
+      - PROXY_URL=                  # 可选：HTTP/HTTPS/SOCKS5 代理（如 http://127.0.0.1:7890）
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
